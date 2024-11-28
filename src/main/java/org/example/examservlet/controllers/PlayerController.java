@@ -15,7 +15,7 @@ import org.example.examservlet.entity.PlayerIndex;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "PlayerController", urlPatterns = {"/players"})
+@WebServlet(name = "PlayerController", value = "/players")
 public class PlayerController extends HttpServlet {
     private PlayerIndexDAO playerIndexDAO;
     private PlayerDAO playerDAO;

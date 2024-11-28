@@ -1,10 +1,11 @@
 <%@ page import="org.example.examservlet.entity.Indexer" %>
 <%@ page import="org.example.examservlet.entity.Player" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%
-    Indexer indexer = (Indexer) request.getAttribute("indexers");
-    Player players = (Player) request.getAttribute("players");
-%>
+<%--<%--%>
+<%--    Indexer indexer = (Indexer) request.getAttribute("indexers");--%>
+<%--    Player players = (Player) request.getAttribute("players");--%>
+<%--%>--%>
 <html>
 <head>
     <title>Player Management</title>
@@ -21,7 +22,7 @@
             <h5>Add New Player</h5>
         </div>
         <div class="card-body">
-            <form action="players" method="post">
+            <form action="" method="post">
                 <input type="hidden" name="action" value="add">
                 <div class="row g-3">
                     <div class="col-md-4">
@@ -42,9 +43,9 @@
                         <label for="indexId" class="form-label">Index Name</label>
                         <select class="form-select" id="indexId" name="indexId" required>
                             <option value="" selected disabled>Select Index</option>
-                            <c:forEach var="indexer" items="${indexers}">
-                                <option value="${indexer.indexId}">${indexer.name}</option>
-                            </c:forEach>
+                            <% for (Indexer i : (List<Indexer>)request.getAttribute("indexers")){%>
+                                <option value="<%= i.getIndexId() %>"><%= i.getName() %></option>
+                            <%}%>
                         </select>
                     </div>
                     <div class="col-md-6">
