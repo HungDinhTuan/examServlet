@@ -22,7 +22,7 @@ public class Player {
     private String fullName;
 
     @Column(name = "age", nullable = false, length = 10)
-    private String age;
+    private int age;
 
     @ManyToOne
     @JoinColumn(name = "index_id", nullable = false)

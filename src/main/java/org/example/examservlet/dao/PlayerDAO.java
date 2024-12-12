@@ -53,4 +53,9 @@ public class PlayerDAO {
         }
     }
 
+    public Player getPlayer(int playerId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.get(Player.class, playerId);
+        }
+    }
 }

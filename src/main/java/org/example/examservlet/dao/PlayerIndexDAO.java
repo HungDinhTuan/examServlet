@@ -8,6 +8,13 @@ import org.hibernate.Transaction;
 import java.util.List;
 
 public class PlayerIndexDAO {
+
+    public List<PlayerIndex> getPlayerIndex() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("from PlayerIndex", PlayerIndex.class).list();
+        }
+    }
+
     public void savePlayerIndex(PlayerIndex playerIndex) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -17,6 +24,40 @@ public class PlayerIndexDAO {
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
             e.printStackTrace();
+        }
+    }
+
+    public void updatePlayerIndex(PlayerIndex playerIndex) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.update(playerIndex);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+        }
+    }
+
+    public void deletePlayerIndex(int playerIndexId) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            PlayerIndex playerIndex = session.get(PlayerIndex.class, playerIndexId);
+            session.delete(playerIndex);
+            if (playerIndex != null) {
+                session.delete(playerIndex);
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            e.printStackTrace();
+        }
+    }
+
+    public PlayerIndex getPlayerIndex(int playerId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.get(PlayerIndex.class, playerId);
         }
     }
 }
