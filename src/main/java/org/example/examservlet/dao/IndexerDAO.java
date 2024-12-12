@@ -12,4 +12,10 @@ public class IndexerDAO {
             return session.createQuery("from Indexer", Indexer.class).list();
         }
     }
+
+    public Indexer getIndexer(int id) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.get(Indexer.class, id);
+        }
+    }
 }

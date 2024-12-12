@@ -149,22 +149,39 @@ public class PlayerController extends HttpServlet {
     }
 
     private void updatePlayer(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String fullName = req.getParameter("name");
-        int age = Integer.parseInt(req.getParameter("age"));
-        int indexId = Integer.parseInt(req.getParameter("indexId"));
-        float value = Float.parseFloat(req.getParameter("value"));
+        try {
+            int playerId = Integer.parseInt(req.getParameter("playerId"));
+            String fullName = req.getParameter("name");
+            int age = Integer.parseInt(req.getParameter("age"));
+            int indexId = Integer.parseInt(req.getParameter("indexId"));
+            float value = Float.parseFloat(req.getParameter("value"));
 
-        Player player = new Player();
-        player.setName(fullName);
-        player.setFullName(fullName);
-        player.setAge(age);
+            Player player = new Player();
+            player.setPlayerId(playerId);
+            player.setName(fullName);
+            player.setFullName(fullName);
+            player.setAge(age);
 
-        Indexer indexer = new Indexer();
-        indexer.setIndexId(indexId);
-        player.setIndexer(indexer);
+            Indexer indexer = indexerDAO.getIndexer(indexId);
+            if (indexer == null) {
+                throw new IllegalArgumentException("Indexer isn't exist.");
+            }
+            player.setIndexer(indexer);
 
-        playerDAO.updatePlayer(player);
+            playerDAO.updatePlayer(player);
 
-        resp.sendRedirect("players?action=list");
+            PlayerIndex playerIndex = new PlayerIndex();
+            playerIndex.setPlayer(player);
+            playerIndex.setIndexer(indexer);
+            playerIndex.setValue(value);
+
+            playerIndexDAO.updatePlayerIndex(playerIndex);
+
+            resp.sendRedirect("players?action=list");
+        } catch (Exception e) {
+            e.printStackTrace();
+            formEditPlayer(req, resp);
+        }
     }
+
 }

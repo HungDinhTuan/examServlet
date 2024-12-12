@@ -21,6 +21,9 @@
     <h1>Create a player</h1>
     <form method="post" action="?action=update">
         <div class="mb-3">
+            <input type="hidden" name="playerId" class="form-control" value="<%= player.getPlayerId() %>">
+        </div>
+        <div class="mb-3">
             <label class="form-label">Player Name</label>
             <input type="text" name="name" class="form-control" value="<%= player.getFullName() %>">
         </div>
@@ -50,7 +53,7 @@
             <label class="form-label">Value</label>
             <input type="number" name="value" class="form-control" value="<%= playerIndex.getValue() %>">
         </div>
-        <button type="submit" class="btn btn-success">Submit</button>
+        <button type="submit" class="btn btn-success">Update</button>
     </form>
 </div>
 </body>

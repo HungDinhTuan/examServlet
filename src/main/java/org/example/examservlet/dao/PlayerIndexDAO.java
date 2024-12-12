@@ -28,16 +28,30 @@ public class PlayerIndexDAO {
     }
 
     public void updatePlayerIndex(PlayerIndex playerIndex) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+
+        try {
             transaction = session.beginTransaction();
-            session.update(playerIndex);
+
+            PlayerIndex existingPlayerIndex = session.get(PlayerIndex.class, playerIndex.getPlayer().getPlayerId());
+            if (existingPlayerIndex != null) {
+                existingPlayerIndex.setValue(playerIndex.getValue());
+                existingPlayerIndex.setIndexer(playerIndex.getIndexer());
+                existingPlayerIndex.setPlayer(playerIndex.getPlayer());
+                session.update(existingPlayerIndex);
+            } else {
+                throw new IllegalArgumentException("PlayerIndex isn't exist");
+            }
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
-            e.printStackTrace();
+            throw e;
+        } finally {
+            session.close();
         }
     }
+
 
     public void deletePlayerIndex(int playerIndexId) {
         Transaction transaction = null;

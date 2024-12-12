@@ -27,16 +27,32 @@ public class PlayerDAO {
     }
 
     public void updatePlayer(Player player) {
+        Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+
+        try {
             transaction = session.beginTransaction();
-            session.update(player);
+
+            Player existingPlayer = session.get(Player.class, player.getPlayerId());
+            if (existingPlayer != null) {
+                existingPlayer.setName(player.getName());
+                existingPlayer.setFullName(player.getFullName());
+                existingPlayer.setAge(player.getAge());
+                existingPlayer.setIndexer(player.getIndexer());
+                session.update(existingPlayer);
+            } else {
+                throw new IllegalArgumentException("Player isn't exist");
+            }
+
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
-            e.printStackTrace();
+            throw e;
+        } finally {
+            session.close();
         }
     }
+
 
     public void deletePlayer(int playerId) {
         Transaction transaction = null;
